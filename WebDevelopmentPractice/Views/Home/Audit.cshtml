@@ -1,0 +1,213 @@
+﻿@{
+    ViewBag.Title = "Audit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/assets/css/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/assets/css/bootstrap.min.css" rel="stylesheet" />
+
+<h2>Select Country</h2>
+
+<select id="countryDropdown" class="form-control">
+    <option value="">Select a Country</option>
+</select>
+
+
+<h2>Select City</h2>
+<select id="CityDropdown" class="form-control">
+    <option value="">Select a City</option>
+</select>
+
+<h2>SelectPostcode</h2>
+<select id="postcodeDropdown" class="form-control">
+    <option value="">Select Postcode</option>
+</select>
+
+<script src="~/assets/js/jquery-3.5.1.js"></script>
+<script src="~/assets/js/jquery-ui.js"></script>
+<script src="~/assets/js/bootstrap.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+         function loadCountry() {
+         $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetCountries", "Home")',
+            async: true,
+            success: function (data) {
+                if (data != null) {
+
+                    var response = (data);
+
+                    if (response.length > 0) {
+
+                        var options = "<option value='-1' selected>...Select Country...</option>";
+                        for (i = 0; i < response.length; i++) {
+                            var value = response[i].countryId;
+                            var text = response[i].countryName;
+                            options = options + "<option value='" + value + "'>" + text + "</option>";
+                        }
+                        $('#countryDropdown').html('');
+                        $('#countryDropdown').append(options);
+                    }
+                    else {
+                        $('#countryDropdown').html('');
+                        $('#countryDropdown').append("<option value='-1' selected>...Select Country...</option>");
+                    }
+                }
+            },
+            failure: function (response) {
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: response.responseText
+                });
+            },
+            error: function (response) {
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: 'Something went worng, Please try again'
+                });
+            }
+
+        });
+        }
+
+
+        function loadCity(countryId) {
+            alert("countryId:"+countryId);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetCities", "Home")',
+            data: { countryId: countryId },
+            async: true,
+            success: function (data) {
+                if (data != null) {
+                    var response = (data);
+
+                    if (response.length > 0) {
+                        var options = "<option value=''>...Select City...</option>";
+
+                        // Loop through the cities returned from the server
+                        for (var i = 0; i < response.length; i++) {
+                            var cityId = response[i].cityId;
+                            var cityName = response[i].cityName;
+
+                            // Concatenate the option HTML string using the city ID and name
+                            options += "<option value='" + cityId + "'>" + cityName + "</option>";
+
+
+                        }
+
+                        // Clear any existing options in the city dropdown
+                        $('#CityDropdown').html(options); // Replace the inner HTML with the new options
+                    } else {
+                        // If no cities are returned, show a default option
+                        $('#CityDropdown').html("<option value=''>...Select City...</option>");
+                    }
+                }
+            },
+            failure: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: response.responseText
+                });
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: 'Something went wrong, Please try again'
+                });
+            }
+        });
+    }
+
+    // Event listener for when a country is selected
+        $('#countryDropdown').change(function () {
+            alert($(countryDropdown).val());
+            var countryId = $(countryDropdown).val(); // Get the selected country name
+        if (countryId) {
+            loadCity(countryId); // Call the function to load cities based on the selected country name
+        } else {
+            $('#CityDropdown').html("<option value=''>...Select City...</option>");
+        }
+    });
+
+@*    loadCountry(); // Load countries when the page loads
+    });*@
+
+
+
+        function loadPostcode(cityId) {
+            alert("ccityId:"+ cityId);
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetPostcodes", "Home")',
+            data: { cityId: cityId },
+            async: true,
+            success: function (data) {
+                if (data != null) {
+                    var response = (data);
+
+                    if (response.length > 0) {
+                        var options = "<option value=''>...Select Postcode...</option>";
+
+                        // Loop through the postcodes returned from the server
+                        for (var i = 0; i < response.length; i++) {
+                            var postcodeId = response[i].postcodeId;
+                            var postcode = response[i].postcode;
+
+                            // Concatenate the option HTML string using the city ID and name
+                            options += "<option value='" + postcodeId + "'>" + postcode + "</option>";
+
+
+                        }
+
+                        // Clear any existing options in the postcode dropdown
+                        $('#postcodeDropdown').html(options); // Replace the inner HTML with the new options
+                    } else {
+                        // If no cities are returned, show a default option
+                        $('#postcodeDropdown').html("<option value=''>...Select Postcode...</option>");
+                    }
+                }
+            },
+            failure: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: response.responseText
+                });
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: 'Something went wrong, Please try again'
+                });
+            }
+        });
+    }
+
+
+    // Event listener for when a city is selected
+    $('#postcodeDropdown').change(function () {
+        alert($(postcodeDropdown).val());
+        var cityId = $(postcodeDropdown).val(); // Get the selected postcode name
+        if (cityId) {
+            loadCity(cityId); // Call the function to load postcodes based on the selected cityname
+        } else {
+            $('#postcodeDropdown').html("<option value=''>...Select Postcode...</option>");
+        }
+    });
+
+    loadCountry(); // Load countries when the page loads
+    });
+
+
+</script>
+

@@ -1,0 +1,11 @@
+CREATE OR REPLACE PROCEDURE ICCD.SP_GET_ALL_CITY (
+    p_country_id IN VARCHAR2,
+    o_city_cursor OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN o_city_cursor FOR
+    SELECT CITYID, CityName FROM TBL_CITY 
+    WHERE COUNTRYID = p_country_id ;
+   
+END SP_GET_ALL_CITY;
+/

@@ -1,0 +1,4 @@
+﻿Build started...
+1>------ Build started: Project: WebDevelopmentPractice, Configuration: Debug Any CPU ------
+1>  WebDevelopmentPractice -> C:\Users\mahfuza.mohona\source\repos\WebDevelopmentPractice\WebDevelopmentPractice\bin\WebDevelopmentPractice.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
