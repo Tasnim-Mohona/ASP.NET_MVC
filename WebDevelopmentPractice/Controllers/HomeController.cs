@@ -135,6 +135,7 @@ namespace WebDevelopmentPractice.Controllers
         [HttpPost]
 
         public JsonResult GetPostcodes(string cityId)
+        
         {
             if (cityId is null || cityId == "")
             {
@@ -146,6 +147,20 @@ namespace WebDevelopmentPractice.Controllers
 
             return Json(postcodes, JsonRequestBehavior.AllowGet);
 
+        }
+
+        [HttpPost]
+        public JsonResult GetArea(string postcode_Id)
+        
+        {
+            if (postcode_Id is null || postcode_Id == "")
+            {
+                return Json(new List<string>(), JsonRequestBehavior.AllowGet);
+            }
+
+            List<CityModel> areas = countryRepository.GetAreasByPostcodeId(postcode_Id);
+
+            return Json(areas, JsonRequestBehavior.AllowGet);
         }
 
     }

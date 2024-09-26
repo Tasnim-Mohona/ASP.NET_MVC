@@ -10,10 +10,12 @@ namespace WebDevelopmentPractice.Models
         public string cityId  {get; set;}
         public string cityName { get; set; }
 
-        public string postcodeId { get; set;}
+        public string postcode_Id { get; set;}
 
         public string postcode { get; set;}
 
+        public string area { get; set; }
+        public string areaId { get; set; }
 
     }
 }

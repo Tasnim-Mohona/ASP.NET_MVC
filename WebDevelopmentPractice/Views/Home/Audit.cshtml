@@ -17,17 +17,22 @@
     <option value="">Select a City</option>
 </select>
 
-<h2>SelectPostcode</h2>
+<h2>Select Postcode</h2>
 <select id="postcodeDropdown" class="form-control">
     <option value="">Select Postcode</option>
+</select>
+
+<h2>Select Area</h2>
+<select id="areaDropdown" class="form-control">
+    <option value="">Select an Area</option>
 </select>
 
 <script src="~/assets/js/jquery-3.5.1.js"></script>
 <script src="~/assets/js/jquery-ui.js"></script>
 <script src="~/assets/js/bootstrap.min.js"></script>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript">
+
     $(document).ready(function () {
          function loadCountry() {
          $.ajax({
@@ -98,8 +103,6 @@
 
                             // Concatenate the option HTML string using the city ID and name
                             options += "<option value='" + cityId + "'>" + cityName + "</option>";
-
-
                         }
 
                         // Clear any existing options in the city dropdown
@@ -144,7 +147,7 @@
 
 
         function loadPostcode(cityId) {
-            alert("ccityId:"+ cityId);
+            alert("cityId:"+ cityId);
         $.ajax({
             type: 'POST',
             url: '@Url.Action("GetPostcodes", "Home")',
@@ -159,12 +162,11 @@
 
                         // Loop through the postcodes returned from the server
                         for (var i = 0; i < response.length; i++) {
-                            var postcodeId = response[i].postcodeId;
+                            var postcodeId = response[i].postcode_Id;
                             var postcode = response[i].postcode;
-
+                            alert("postcodeId:" + postcodeId);
                             // Concatenate the option HTML string using the city ID and name
                             options += "<option value='" + postcodeId + "'>" + postcode + "</option>";
-
 
                         }
 
@@ -195,19 +197,94 @@
 
 
     // Event listener for when a city is selected
-    $('#postcodeDropdown').change(function () {
-        alert($(postcodeDropdown).val());
-        var cityId = $(postcodeDropdown).val(); // Get the selected postcode name
+        $('#CityDropdown').change(function () {
+            alert($(CityDropdown).val());
+            var cityId = $(CityDropdown).val();                                  // Get the selected postcode name
         if (cityId) {
-            loadCity(cityId); // Call the function to load postcodes based on the selected cityname
+            loadPostcode(cityId);                                               // Call the function to load postcodes based on the selected cityname
         } else {
             $('#postcodeDropdown').html("<option value=''>...Select Postcode...</option>");
         }
-    });
+        });
 
-    loadCountry(); // Load countries when the page loads
-    });
 
+        function loadArea(postcode_Id) {
+            alert("loadArea function called with postcode_Id: :" + postcode_Id);
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetArea", "Home")',
+            data: { postcode_Id: postcode_Id },
+            async: true,
+            success: function (data) {
+                alert("AJAX success: data received");                                                       // Alert to check if success is hit
+
+                if (data != null) {
+                    var response = (data);
+                    alert("Data length: " + response.length);                                           // Alert to show number of items received
+
+                    if (response.length > 0) {
+                        var options = "<option value=''>...Select Area...</option>";
+
+                        // Loop through the areas returned from the server
+                        for (var i = 0; i < response.length; i++) {
+                            var areaId = response[i].areaId ;
+                            var area = response[i].area;
+                            alert("areaId :" + areaId );
+
+                            // Concatenate the option HTML string using the area ID and name
+                            options += "<option value='" + areaId + "'>" + area + "</option>";
+
+                        }
+
+                        // Clear any existing options in the area dropdown
+                        $('#areaDropdown').html(options);                               // Replace the inner HTML with the new options
+                        alert("Dropdown populated with areas.");                       // Alert to confirm dropdown population
+
+                    } else {
+                        // If no cities are returned, show a default option
+                        $('#areaDropdown').html("<option value=''>...Select Area...</option>");
+                        alert("No areas found, default option added."); // Alert if no areas are returned
+
+                    }
+                }
+            },
+
+
+            failure: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: response.responseText
+                });
+            },
+            error: function (response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed',
+                    text: 'Something went wrong, Please try again'
+                });
+            }
+        });
+    }
+
+
+    // Event listener for when a postcode is selected
+        $('#postcodeDropdown').change(function () {
+            alert($(postcodeDropdown).val());
+            var postcode_Id = $(postcodeDropdown).val();             // Get the selected Postcode name
+            @*var postcode_Id = $(this).val();*@ // Corrected to use 'this'
+            alert("Postcode selected: " + postcode_Id);             // Alert to check the selected postcode ID
+            if (postcode_Id) {
+            loadArea(postcode_Id);                                  // Call the function to load Areas based on the selected Postcode
+        } else {
+            $('#areaDropdown').html("<option value=''>...Select Area...</option>");
+            alert("No postcode selected, default area option added.");                                              // Alert if no postcode is selected
+            }
+        });
+
+        loadCountry();                                                                                              // Load countries when the page loads
+        alert("Countries loaded on page load.");
+    });
 
 </script>
-

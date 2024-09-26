@@ -46,9 +46,24 @@ namespace WebDevelopmentPractice.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception("Error retrieving country data: " + ex.Message, ex);
+                throw new Exception("Error retrieving postcode data: " + ex.Message, ex);
             }
             return objPostcodeList;
+        }
+
+
+        public List<CityModel> GetAreasByPostcodeId(string postcode_Id)
+        {
+            List<CityModel> objAreaList = null;
+            try
+            {
+                objAreaList = new CountryCityInfoDb().GetAreasByPostcodeId(postcode_Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving area data: " + ex.Message, ex);
+            }
+            return objAreaList;
         }
 
     }
