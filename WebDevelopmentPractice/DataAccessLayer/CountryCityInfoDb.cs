@@ -116,9 +116,6 @@ namespace WebDevelopmentPractice.DataAccessLayer
         }
 
 
-
-      
-
         public List<CityModel> GetPostcodesByCityId(string cityId)
         {
             List<CityModel> objPostcodeModelList = new List<CityModel>();
@@ -136,8 +133,8 @@ namespace WebDevelopmentPractice.DataAccessLayer
                     command.BindByName = true;
 
 
-                    command.Parameters.Add(new OracleParameter("p_city_id", cityId));
-                    command.Parameters.Add("o_city_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
+                    command.Parameters.Add(new OracleParameter("P_CITY_ID", cityId));
+                    command.Parameters.Add("O_POSTCODE_CURSOR", OracleDbType.RefCursor, ParameterDirection.Output);
 
                     OracleDataAdapter da = new OracleDataAdapter();
                     da.SelectCommand = command;
@@ -149,7 +146,7 @@ namespace WebDevelopmentPractice.DataAccessLayer
                                             select new CityModel()
                                             {
                                                 postcodeId = dr["POSTCODE_ID"].ToString(),
-                                                cityName = dr["POSTCODE"].ToString()
+                                                postcode = dr["POSTCODE"].ToString()
                                             }).ToList();
 
                     }
@@ -168,8 +165,6 @@ namespace WebDevelopmentPractice.DataAccessLayer
 
             return objPostcodeModelList;
         }
-
-
 
     }
 }
@@ -193,54 +188,3 @@ namespace WebDevelopmentPractice.DataAccessLayer
 
 
 
-/*   public List<CityModel> GetCity()
-   {
-       List<CityModel> objCityModelList = new List<CityModel>();
-     //  List<string> cityNames = objCityModelList.Select(c => c.cityName).ToList();
-
-
-       try
-       {
-           dbConnection = new DbConnection();
-           con = new OracleConnection(dbConnection.getConnectionString());
-           using (OracleCommand command = new OracleCommand())
-           {
-               DataSet ds = new DataSet();
-               command.CommandText = "SP_GET_ALL_CITY";
-               command.CommandType = CommandType.StoredProcedure;
-               command.Connection = con;
-               command.BindByName = true;
-
-               command.Parameters.Add(new OracleParameter("p_country_id", countryId));
-
-               command.Parameters.Add("o_city_cursor", OracleDbType.RefCursor, ParameterDirection.Output);
-
-               OracleDataAdapter da = new OracleDataAdapter();
-               da.SelectCommand = command;
-               da.Fill(ds);
-               int count = ds.Tables[0].Rows.Count;
-               if (count > 0)
-               {
-                   objCityModelList = (from DataRow dr in ds.Tables[0].Rows
-                                          select new CountryModel()
-                                          {
-                                              countryId = dr["COUNTRYID"].ToString(),
-                                              cityName = dr["CITYNAME"].ToString()
-                                          }).ToList();
-
-               }
-           }
-       }
-       catch (Exception ex)
-       {
-           throw new Exception(ex.Message);
-       }
-       finally
-       {
-           if (con != null && con.State == System.Data.ConnectionState.Open)
-               con.Close();
-           con.Dispose();
-       }
-
-       return objCityModelList;
-*/

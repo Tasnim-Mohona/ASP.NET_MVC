@@ -144,7 +144,7 @@
 
 
         function loadPostcode(cityId) {
-            alert("ccityId:"+ cityId);
+            alert("cityId:"+ cityId);
         $.ajax({
             type: 'POST',
             url: '@Url.Action("GetPostcodes", "Home")',
@@ -195,11 +195,11 @@
 
 
     // Event listener for when a city is selected
-    $('#postcodeDropdown').change(function () {
-        alert($(postcodeDropdown).val());
-        var cityId = $(postcodeDropdown).val(); // Get the selected postcode name
+        $('#CityDropdown').change(function () {
+            alert($(CityDropdown).val());
+            var cityId = $(CityDropdown).val(); // Get the selected postcode name
         if (cityId) {
-            loadCity(cityId); // Call the function to load postcodes based on the selected cityname
+            loadPostcode(cityId); // Call the function to load postcodes based on the selected cityname
         } else {
             $('#postcodeDropdown').html("<option value=''>...Select Postcode...</option>");
         }
